@@ -18,7 +18,7 @@ REDDIT_REDIRECT_URI=https://lehre.bpm.in.tum.de/ports/3036/reddit/oauth/callback
 
 ### Running the App
 
-#### Backend on lehre server 
+#### Backend 
 ```bash
 cd reddit/backend
 node index.js
