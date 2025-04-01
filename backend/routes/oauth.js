@@ -39,7 +39,6 @@ router.get('/callback', async (req, res) => {
     });
 
     const tokenData = await tokenResponse.json();
-    console.log('Full Token Data:', tokenData);
 
     if (tokenData.error) {
       console.error("Error from Reddit:", tokenData.error, tokenData);
