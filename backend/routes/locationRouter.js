@@ -24,7 +24,7 @@ locationRouter.get('/location', async (req, res) => {
   const activity = req.headers['cpee-activity'];
   const instance = req.headers['cpee-instance'];
 
-  registerInstanceId(instanceId); // ✅ register for SSE
+  registerInstanceId(instanceId); 
 
   const location = locations[Math.floor(Math.random() * locations.length)];
   const timestamp = new Date().toISOString();
