@@ -16,7 +16,6 @@ setRouter.put('/', (req, res) => {
   // Save to instanceStore
   instanceStore[instanceId] = { instanceId, keyword };
 
-  console.log(`Instance ${instanceId} set with keyword '${keyword}' (via JSON body)`);
   res.json({ message: `Instance ${instanceId} set with keyword '${keyword}'`, instance: instanceStore[instanceId] });
 });
 
