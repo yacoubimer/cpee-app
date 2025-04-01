@@ -31,20 +31,14 @@ node index.js
 
 Or if you're running the mock backend:
 ```bash
-cd reddit/backend
 node app-mock.js
 ```
 
 #### Frontend
-```bash
-cd ../frontend
-npm install
-npm start    # For Create React App (CRA)
-```
 
-If you're using Vite instead:
+If you're testing locally:
 ```bash
-npm run dev -- --host
+npm run dev
 ```
 
 ---
@@ -72,7 +66,7 @@ Data fetching (like metrics and sensors) works without login via Reddit's public
 
 Visit the dashboard:
 ```
-http://localhost:5173
+https://lehre.bpm.in.tum.de/ports/3036/
 ```
 
 ```
@@ -82,22 +76,4 @@ Visualizes:
 - Post metrics (total posts, city match, types)
 - Location sensor data (city, coordinates, temperature)
 
----
-
-### Test Mode & Mock Data
-
-When live data is not available or slow to arrive, a fallback **mock stream** can be used by switching to **Test Mode** via the dashboard toggle. 
-This mode simulates Reddit data in real time using SSE and allows testing all visual components without a running CPEE instance.
-
-To run with mock data:
-1. Run `app-mock.js` in backend
-2. Start frontend (`npm start`)
-3. Visit the dashboard and click "Switch to Test Mode"
-
----
-
-### Known Development Note
-
-The dashboard was tested locally using mock data due to  issues serving the frontend build in the deployment environment. 
-All visualizations and stream logic remain fully compatible with real runtime data from CPEE 
 
