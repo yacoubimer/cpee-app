@@ -25,12 +25,15 @@ node index.js
 ```
 Or if you're running the mock backend locally:
 ```bash
+cd backend
 node app-mock.js
 ```
 
 #### Frontend
 If you're running locally for testing:
 ```bash
+cd frontend
+npm install
 npm run dev
 ```
 
