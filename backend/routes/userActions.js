@@ -1,10 +1,9 @@
 import express from 'express';
 import fetch from 'node-fetch';
-import { instanceStore } from './setRouter.js';
 
 const userActionsRouter = express.Router();
 
-// Helper to get random post by keyword
+// Helper to get a random post by keyword
 const getRandomPostByKeyword = async (keyword) => {
   const headers = { 'User-Agent': 'TUM-Reddit-Project/1.0' };
   const url = `https://www.reddit.com/search.json?q=${encodeURIComponent(keyword)}&limit=100`;
@@ -13,20 +12,22 @@ const getRandomPostByKeyword = async (keyword) => {
   const data = await response.json();
   const posts = data.data?.children || [];
   if (!posts.length) throw new Error('No posts found');
-  return posts[Math.floor(Math.random() * posts.length)].data.name; // fullname (e.g., t3_xyz)
+
+  const post = posts[Math.floor(Math.random() * posts.length)].data;
+  return {
+    fullname: post.name, // e.g., t3_abc123
+    title: post.title,
+    subreddit: post.subreddit,
+    url: `https://www.reddit.com${post.permalink}`
+  };
 };
 
 // Vote on a post (upvote/downvote)
 const voteOnPost = async (req, res, direction) => {
-  const { instanceId, keyword } = req.query;
+  const { keyword } = req.body;
 
-  if (!instanceId || !keyword) {
-    return res.status(400).json({ error: 'instanceId and keyword are required as query params' });
-  }
-
-  const instance = instanceStore[instanceId];
-  if (!instance) {
-    return res.status(404).json({ error: 'Instance not found' });
+  if (!keyword) {
+    return res.status(400).json({ error: 'keyword is required in the request body' });
   }
 
   const accessToken = global.redditAccessToken;
@@ -35,9 +36,9 @@ const voteOnPost = async (req, res, direction) => {
   }
 
   try {
-    const postFullname = await getRandomPostByKeyword(keyword);
+    const { fullname, title, subreddit, url } = await getRandomPostByKeyword(keyword);
 
-    const voteResponse = await fetch('https://oauth.reddit.com/api/vote', {
+    await fetch('https://oauth.reddit.com/api/vote', {
       method: 'POST',
       headers: {
         'Authorization': `bearer ${accessToken}`,
@@ -46,18 +47,17 @@ const voteOnPost = async (req, res, direction) => {
       },
       body: new URLSearchParams({
         dir: direction.toString(),
-        id: postFullname
+        id: fullname
       })
     });
-
-    const voteData = await voteResponse.json();
 
     res.json({
       success: true,
       action: direction === 1 ? 'upvote' : 'downvote',
-      instanceId,
-      postId: postFullname,
-      data: voteData
+      title,
+      subreddit,
+      url,
+      fullname
     });
   } catch (error) {
     console.error('Vote error:', error);
@@ -65,21 +65,16 @@ const voteOnPost = async (req, res, direction) => {
   }
 };
 
-// Upvote and Downvote endpoints
+// Upvote and Downvote endpoints (keyword in body)
 userActionsRouter.post('/upvote', (req, res) => voteOnPost(req, res, 1));
 userActionsRouter.post('/downvote', (req, res) => voteOnPost(req, res, -1));
 
 // Comment on a random post
 userActionsRouter.post('/comment', async (req, res) => {
-  const { instanceId, keyword, text } = req.body;
+  const { keyword, text } = req.body;
 
-  if (!instanceId || !keyword || !text) {
-    return res.status(400).json({ error: 'instanceId, keyword, and text are required' });
-  }
-
-  const instance = instanceStore[instanceId];
-  if (!instance) {
-    return res.status(404).json({ error: 'Instance not found' });
+  if (!keyword || !text) {
+    return res.status(400).json({ error: 'keyword and text are required in the request body' });
   }
 
   const accessToken = global.redditAccessToken;
@@ -88,9 +83,9 @@ userActionsRouter.post('/comment', async (req, res) => {
   }
 
   try {
-    const postFullname = await getRandomPostByKeyword(keyword);
+    const { fullname, title, subreddit, url } = await getRandomPostByKeyword(keyword);
 
-    const commentResponse = await fetch('https://oauth.reddit.com/api/comment', {
+    await fetch('https://oauth.reddit.com/api/comment', {
       method: 'POST',
       headers: {
         'Authorization': `bearer ${accessToken}`,
@@ -100,18 +95,17 @@ userActionsRouter.post('/comment', async (req, res) => {
       body: new URLSearchParams({
         api_type: 'json',
         text,
-        thing_id: postFullname
+        thing_id: fullname
       })
     });
-
-    const commentData = await commentResponse.json();
 
     res.json({
       success: true,
       action: 'comment',
-      instanceId,
-      postId: postFullname,
-      data: commentData
+      title,
+      subreddit,
+      url,
+      fullname
     });
   } catch (error) {
     console.error('Comment error:', error);

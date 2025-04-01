@@ -125,7 +125,7 @@ engagementRouter.get('/engagement', async (req, res) => {
         body: JSON.stringify(result)
       });
 
-      console.log(`[Engagement] Sent metrics to CPEE. Status: ${response.status}`);
+
     } else {
       console.warn('No CPEE callback URL provided.');
     }
