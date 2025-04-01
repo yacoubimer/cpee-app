@@ -25,13 +25,13 @@ cd Reddit-CPEE-Integration-Project
 
 #### Backend
 ```bash
-cd backend
+cd reddit/backend
 node index.js
 ```
 
 Or if you're running the mock backend:
 ```bash
-cd backend
+cd reddit/backend
 node app-mock.js
 ```
 
