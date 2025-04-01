@@ -8,7 +8,7 @@ router.get('/login', (req, res) => {
   const clientId = process.env.REDDIT_CLIENT_ID;
   const redirectUri = encodeURIComponent(process.env.REDDIT_REDIRECT_URI);
   const scope = 'read vote submit';
-  const state = 'myRandomStateString'; // Ideally generate dynamically and store per session
+  const state = 'myRandomStateString';
   const duration = 'permanent';
 
   const authUrl = `https://www.reddit.com/api/v1/authorize?client_id=${clientId}` +
