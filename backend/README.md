@@ -18,31 +18,23 @@ REDDIT_REDIRECT_URI=https://lehre.bpm.in.tum.de/ports/3036/reddit/oauth/callback
 
 ### Running the App
 
-First, clone or navigate to your project folder:
-```bash
-cd Reddit-CPEE-Integration-Project
-```
-
-#### Backend
+#### Backend on lehre server 
 ```bash
 cd reddit/backend
 node index.js
 ```
-
-Or if you're running the mock backend:
+Or if you're running the mock backend locally:
 ```bash
 node app-mock.js
 ```
 
 #### Frontend
-
-If you're testing locally:
+If you're running locally for testing:
 ```bash
 npm run dev
 ```
 
 ---
-
 ### Reddit Authorization
 
 1. In your CPEE process, find the `authorizationUrl` provided in the process model.
