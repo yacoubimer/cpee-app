@@ -37,7 +37,6 @@ streamPushRouter.post('/', express.raw({ type: '*/*', limit: '2mb' }), (req, res
       return res.status(200).json({ message: 'Instance not registered or ID missing' });
     }
 
-    // Only this log will appear
     console.log('[ Forwarded to frontend]:', result);
 
     sendToFrontend(result);
